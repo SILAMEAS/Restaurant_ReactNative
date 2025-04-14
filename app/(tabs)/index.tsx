@@ -1,74 +1,65 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import React from 'react';
+import {Text, StyleSheet, ActivityIndicator, ScrollView, View} from 'react-native';
+import {useGetRestaurantsQuery} from "@/services/api";
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+    const { currentData, error, isLoading, refetch } = useGetRestaurantsQuery();
+    // Force refetch on component mount (e.g., after reload)
+    // useEffect(() => {
+    //     refetch();
+    // }, [refetch]); // Run on mount and whenever refetch changes
+    console.log('RTK Query State:', { isLoading, error, currentData });
+    return (
+        <ScrollView contentContainerStyle={{ padding: 20 }}>
+            <Text style={{ fontSize: 22, fontWeight: 'bold' }}>Restaurants</Text>
+            {isLoading && <ActivityIndicator />}
+            {error && <Text style={{ color: 'red' }}>Error: {JSON.stringify(error)}</Text>}
+            {currentData?.contents?.map((restaurant: any) => (
+                <View key={restaurant.id} style={styles.card}>
+                    <Text style={styles.name}>{restaurant.name}</Text>
+                    <Text>{restaurant.description}</Text>
+                    <Text>🍽 Cuisine: {restaurant.cuisineType}</Text>
+                    <Text>📍 {restaurant.address?.city}</Text>
+                    <Text>📞 {restaurant.contactInformation?.phone}</Text>
+                </View>
+            ))}
+            <Text style={{ color: 'blue', marginTop: 10 }} onPress={refetch}>🔄 Refresh</Text>
+        </ScrollView>
+    );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
+    container: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        padding: 20,
+        backgroundColor: '#fff',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 16,
+    },
+    card: {
+        marginBottom: 16,
+        padding: 16,
+        borderRadius: 10,
+        backgroundColor: '#f1f1f1',
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+    },
+    name: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    error: {
+        color: 'red',
+        marginVertical: 10,
+    },
+    refresh: {
+        color: 'blue',
+        marginTop: 20,
+        textAlign: 'center',
+    },
 });
