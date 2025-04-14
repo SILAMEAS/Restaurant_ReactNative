@@ -48,3 +48,20 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+### Build a Standalone APK or AAB (no Expo Go needed)
+
+1. Install EAS CLI (if you haven't already):
+
+
+      npm install -g eas-cli
+
+
+2. Login to Expo account:
+3. Configure your project for EAS:
+4. Build the Android APK:
+5. After the build completes, you'll get a download link to the .apk or .aab.
+
+
+
+      npm install -g eas-cli
