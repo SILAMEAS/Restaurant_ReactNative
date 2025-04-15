@@ -1,10 +1,13 @@
 import React from 'react';
-import {Text, StyleSheet, ActivityIndicator, ScrollView, View} from 'react-native';
+import { StyleSheet, ActivityIndicator, ScrollView, View} from 'react-native';
 import {useGetRestaurantsQuery} from "@/services/api";
-import {Box} from "@gluestack-ui/themed";
+import {Box, Button, ButtonText, Text} from "@gluestack-ui/themed";
+import useAuthorization from "@/hooks/custom/useAuthorization";
+import ButtonToggleTheme from "@/components/custom/ButtonToggleTheme";
 
 export default function HomeScreen() {
     const { currentData, error, isLoading, refetch } = useGetRestaurantsQuery();
+    const {handleLogout}=useAuthorization();
     return (
         <ScrollView contentContainerStyle={{ padding: 20 }}>
             <Box flex={1} justifyContent="center" alignItems="center" bg="$primary">
@@ -25,6 +28,10 @@ export default function HomeScreen() {
                 </View>
             ))}
             <Text style={{ color: 'blue', marginTop: 10 }} onPress={refetch}>🔄 Refresh</Text>
+            <Button size="md" variant="solid" action="primary" onPress={handleLogout}>
+                <ButtonText>Hello World!</ButtonText>
+            </Button>
+            <ButtonToggleTheme/>
         </ScrollView>
     );
 }

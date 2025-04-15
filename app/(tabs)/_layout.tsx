@@ -11,7 +11,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "@/store";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const {theme} = useColorScheme();
     const { userLogin:{accessToken} } = useSelector((state: RootState) => state.auth);
 
     if (!accessToken) {
@@ -20,7 +20,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors[theme ?? 'light'].tint,
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,

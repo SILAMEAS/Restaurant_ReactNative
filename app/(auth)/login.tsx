@@ -1,65 +1,164 @@
-import { View, Text, TextInput, Button } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { setUserLogin } from '@/store/authSlice';
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import {useLoginMutation} from "@/services/authApi";
-import Toast from 'react-native-toast-message'; // Import Toast
-export default function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [login, { isLoading }] = useLoginMutation();
-    const dispatch = useDispatch();
-    const router = useRouter();
+import {useState} from "react"
+import {StyleSheet, TextInput, TouchableOpacity, View} from "react-native"
+import {Box, HStack, Text, VStack} from "@gluestack-ui/themed"
+import useAuthorization from "@/hooks/custom/useAuthorization";
 
-    const handleLogin = async () => {
-        if (!email || !password) {
-            Toast.show({
-                type: 'error',
-                text1: 'Validation Error',
-                text2: 'Please enter both email and password',
-            });
-            return;
-        }
-        try {
+export default function LoginScreen() {
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const {handleLogin} = useAuthorization();
 
-            const data = await login({ email, password }).unwrap();
-            dispatch(setUserLogin(data));
-            Toast.show({
-                type: 'success',
-                text1: 'Login Success',
-                text2: email,
-            });
-            router.replace('/(tabs)'); // Redirect to tabs after login
+    return <Box style={styles.container}>
+        <Box style={styles.content}>
+            <VStack space="md">
+                <Text style={styles.title}>Welcome Back</Text>
+                <Text style={styles.subtitle}>Sign in to continue to your account</Text>
 
-        } catch (error:any) {
-            const errorMessage = error?.data?.message || 'An error occurred during login';
-            Toast.show({
-                type: 'error',
-                text1: 'Login Failed',
-                text2: errorMessage,
-            });
-        }
-    };
+                <View style={styles.formGroup}>
+                    <Text style={styles.label}>Email*</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="example@gmail.com"
+                        value={email}
+                        onChangeText={setEmail}
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                    />
+                </View>
 
-    return (
-        <View style={{ padding: 20 }}>
-            <Text>Login</Text>
-            <TextInput
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-                style={{ borderWidth: 1, marginVertical: 10, padding: 5 }}
-            />
-            <TextInput
-                placeholder="Password"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                style={{ borderWidth: 1, marginVertical: 10, padding: 5 }}
-            />
-            <Button title={isLoading ? 'Logging in...' : 'Login'} onPress={handleLogin} />
-            <Button title="Go to Signup" onPress={() => router.push('/(auth)/signup')} />
-        </View>
-    );
+                <View style={styles.formGroup}>
+                    <Text style={styles.label}>Password*</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="***"
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry
+                        autoCapitalize="none"
+                    />
+                </View>
+
+                <HStack justifyContent="flex-end">
+                    <TouchableOpacity>
+                        <Text style={styles.forgotPassword}>Forgot Password?</Text>
+                    </TouchableOpacity>
+                </HStack>
+
+                <TouchableOpacity style={styles.signInButton} onPress={() => handleLogin(email, password)}>
+                    <Text style={styles.signInText}>Sign In</Text>
+                </TouchableOpacity>
+
+                <Text style={styles.orText}>Or continue with</Text>
+
+                <HStack space="md" style={styles.socialButtons}>
+                    <TouchableOpacity style={[styles.socialButton, styles.googleButton]}>
+                        <Text style={styles.socialButtonText}>Google</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.socialButton, styles.appleButton]}>
+                        <Text style={styles.socialButtonText}>Apple</Text>
+                    </TouchableOpacity>
+                </HStack>
+
+                <HStack justifyContent="center" style={styles.signUpContainer}>
+                    <Text style={styles.noAccountText}>Don't have an account? </Text>
+                    <TouchableOpacity>
+                        <Text style={styles.signUpText}>Sign Up</Text>
+                    </TouchableOpacity>
+                </HStack>
+            </VStack>
+        </Box>
+    </Box>
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "red",
+        justifyContent: "center",
+        alignItems: 'center'
+
+    },
+    content: {
+        padding: 16
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+    subtitle: {
+        fontSize: 16,
+        textAlign: "center",
+        marginBottom: 20,
+    },
+    formGroup: {
+        marginBottom: 16,
+    },
+    label: {
+        fontSize: 14,
+        marginBottom: 4,
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        padding: 8,
+        borderRadius: 4,
+        fontSize: 14,
+    },
+    forgotPassword: {
+        fontSize: 14,
+        color: "#000",
+        textAlign: "right",
+        textDecorationLine: "underline",
+    },
+    signInButton: {
+        backgroundColor: "#fff",
+        borderWidth: 1,
+        borderColor: "#ccc",
+        padding: 10,
+        borderRadius: 4,
+        alignItems: "center",
+        marginTop: 10,
+        marginBottom: 10,
+    },
+    signInText: {
+        fontSize: 14,
+        fontWeight: "500",
+    },
+    orText: {
+        textAlign: "center",
+        fontSize: 14,
+        marginVertical: 10,
+    },
+    socialButtons: {
+        justifyContent: "space-between",
+    },
+    socialButton: {
+        flex: 1,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        padding: 10,
+        borderRadius: 4,
+        alignItems: "center",
+    },
+    googleButton: {
+        marginRight: 5,
+    },
+    appleButton: {
+        marginLeft: 5,
+    },
+    socialButtonText: {
+        fontSize: 14,
+    },
+    signUpContainer: {
+        marginTop: 20,
+    },
+    noAccountText: {
+        fontSize: 14,
+    },
+    signUpText: {
+        fontSize: 14,
+        fontWeight: "500",
+        textDecorationLine: "underline",
+    },
+})

@@ -9,15 +9,11 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import {useDispatch} from "react-redux";
 import {useRouter} from "expo-router";
 import {logout} from "@/store/authSlice";
+import {Button} from "@gluestack-ui/themed";
+import useAuthorization from "@/hooks/custom/useAuthorization";
 
 export default function TabTwoScreen() {
-    const dispatch = useDispatch();
-    const router = useRouter();
-
-    const handleLogout = () => {
-        dispatch(logout());
-        router.replace('/(auth)/login');
-    };
+    const {handleLogout}=useAuthorization();
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
@@ -101,6 +97,7 @@ export default function TabTwoScreen() {
           ),
         })}
       </Collapsible>
+        <Button onPress={handleLogout}>Log out</Button>
     </ParallaxScrollView>
   );
 }
