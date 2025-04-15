@@ -3,7 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "build": "expo export:web",
+    "vercel-build": "npx expo export --platform web",
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
@@ -41,7 +41,8 @@
     "react-native-screens": "~4.4.0",
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
-    "react-redux": "^9.2.0"
+    "react-redux": "^9.2.0",
+    "@expo/metro-runtime": "~4.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
