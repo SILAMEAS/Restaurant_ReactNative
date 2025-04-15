@@ -1,12 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { api } from '@/services/api'; // your RTK Query service
-
+import authReducer from './authSlice';
+import {authApi} from "@/services/authApi";
 export const store = configureStore({
     reducer: {
+        auth: authReducer,
+        [authApi.reducerPath]: authApi.reducer,
         [api.reducerPath]: api.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(api.middleware),
+        getDefaultMiddleware().concat(api.middleware,authApi.middleware),
 });
 // Optionally, reset the store on reload
 if (__DEV__) {

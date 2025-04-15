@@ -1,4 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import {Env} from "@/services/Env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const customFetchFn = async (input:any, init:any) => {
     // Set a custom timeout (e.g., 120 seconds)
     const controller = new AbortController();
@@ -16,12 +18,11 @@ const customFetchFn = async (input:any, init:any) => {
 export const api = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'https://wow-now-backend-springboot-jdke.onrender.com/api/',
+        baseUrl:Env.baseUrl+ 'api/',
         fetchFn: customFetchFn, // Use the custom fetch with increased timeout
-        prepareHeaders: (headers) => {
-            const token = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJNb24gQXByIDE0IDE2OjAxOjE5IElDVCAyMDI1IiwiZXhwIjoxNzQ1MjI2MDc5LCJlbWFpbCI6InNpbGEtZW5kQGdtYWlsLmNvbSIsImF1dGhvcml0aWVzIjoiVVNFUiJ9.s9Mk6PYG0Id9mDuJQMvjy9dvH8q6t-3MzQ403rz59WNzJWpq1vWtbqa6vVkgcfWQUMO2AqtlNXUwSDGFpPHe7A";
-            console.log('Making request to /restaurants');
-            if (token) headers.set('Authorization', `Bearer ${token}`);
+        prepareHeaders:async (headers) => {
+            const accessToken = await AsyncStorage.getItem('accessToken');
+            if (accessToken) headers.set('Authorization', `Bearer ${accessToken}`);
             return headers;
         },
     }),

@@ -4,11 +4,6 @@ import {useGetRestaurantsQuery} from "@/services/api";
 
 export default function HomeScreen() {
     const { currentData, error, isLoading, refetch } = useGetRestaurantsQuery();
-    // Force refetch on component mount (e.g., after reload)
-    // useEffect(() => {
-    //     refetch();
-    // }, [refetch]); // Run on mount and whenever refetch changes
-    console.log('RTK Query State:', { isLoading, error, currentData });
     return (
         <ScrollView contentContainerStyle={{ padding: 20 }}>
             <Text style={{ fontSize: 22, fontWeight: 'bold' }}>Restaurants</Text>

@@ -7,10 +7,12 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { Provider } from 'react-redux'; // 👈 Redux
-import { store } from '../store'; // 👈 Your store
-
-SplashScreen.preventAutoHideAsync();
+import {Provider, useDispatch, useSelector} from 'react-redux'; // 👈 Redux
+import {RootState, store} from '@/store';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {setLoading, setUserLogin} from "@/store/authSlice"; // 👈 Your store
+import Toast from 'react-native-toast-message'; // Import Toast
+SplashScreen.preventAutoHideAsync().then(r => r);
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -20,7 +22,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync().then(r => r);
     }
   }, [loaded]);
 
@@ -31,9 +33,32 @@ export default function RootLayout() {
   return (
       <Provider store={store}>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Slot />
+          <AuthWrapper/>
+          <Toast /> {/* Add Toast component here */}
           <StatusBar style="auto" />
         </ThemeProvider>
       </Provider>
   );
+}
+function AuthWrapper() {
+  const dispatch = useDispatch();
+  const { userLogin, isLoading } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    const loadToken = async () => {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      const refreshToken = await AsyncStorage.getItem('refreshToken');
+      if (accessToken) {
+        dispatch(setUserLogin({...userLogin,refreshToken,accessToken}));
+      }
+      dispatch(setLoading(false));
+    };
+    loadToken().then(r => r);
+  }, [dispatch]);
+
+  if (isLoading) {
+    return null; // Optionally show a loading screen
+  }
+
+  return <Slot />;
 }
