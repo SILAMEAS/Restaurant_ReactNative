@@ -1,11 +1,17 @@
 import React from 'react';
 import {Text, StyleSheet, ActivityIndicator, ScrollView, View} from 'react-native';
 import {useGetRestaurantsQuery} from "@/services/api";
+import {Box} from "@gluestack-ui/themed";
 
 export default function HomeScreen() {
     const { currentData, error, isLoading, refetch } = useGetRestaurantsQuery();
     return (
         <ScrollView contentContainerStyle={{ padding: 20 }}>
+            <Box flex={1} justifyContent="center" alignItems="center" bg="$primary">
+                <Text color="white" fontSize="$xl">
+                    Welcome to Gluestack-UI!
+                </Text>
+            </Box>
             <Text style={{ fontSize: 22, fontWeight: 'bold' }}>Restaurants</Text>
             {isLoading && <ActivityIndicator />}
             {error && <Text style={{ color: 'red' }}>Error: {JSON.stringify(error)}</Text>}

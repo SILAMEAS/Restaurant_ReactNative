@@ -11,7 +11,10 @@ import {Provider, useDispatch, useSelector} from 'react-redux'; // 👈 Redux
 import {RootState, store} from '@/store';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {setLoading, setUserLogin} from "@/store/authSlice"; // 👈 Your store
-import Toast from 'react-native-toast-message'; // Import Toast
+import Toast from 'react-native-toast-message';
+import {SafeAreaProvider} from "react-native-safe-area-context";
+import {GluestackUIProvider} from "@gluestack-ui/themed";
+import {gluestackConfig} from "@/constants/gluestackConfig"; // Import Toast
 SplashScreen.preventAutoHideAsync().then(r => r);
 
 export default function RootLayout() {
@@ -60,5 +63,9 @@ function AuthWrapper() {
     return null; // Optionally show a loading screen
   }
 
-  return <Slot />;
+  return <SafeAreaProvider>
+    <GluestackUIProvider config={gluestackConfig}>
+      <Slot />
+    </GluestackUIProvider>
+  </SafeAreaProvider>;
 }

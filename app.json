@@ -3,6 +3,9 @@
     "name": "restaurant",
     "slug": "restaurant",
     "version": "1.0.0",
+    "scripts": {
+      "postinstall": "nativewind-postinstall"
+    },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
