@@ -1,38 +1,35 @@
 import React from 'react';
-import { StyleSheet, ActivityIndicator, ScrollView, View} from 'react-native';
+import {ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {useGetRestaurantsQuery} from "@/services/api";
-import {Box, Button, ButtonText, Text} from "@gluestack-ui/themed";
+import {Box, Button, ButtonText} from "@gluestack-ui/themed";
 import useAuthorization from "@/hooks/custom/useAuthorization";
 import ButtonToggleTheme from "@/components/custom/ButtonToggleTheme";
 
 export default function HomeScreen() {
-    const { currentData, error, isLoading, refetch } = useGetRestaurantsQuery();
-    const {handleLogout}=useAuthorization();
+    const {currentData, error, isLoading, refetch} = useGetRestaurantsQuery();
+    const {handleLogout} = useAuthorization();
     return (
-        <ScrollView contentContainerStyle={{ padding: 20 }}>
-            <Box flex={1} justifyContent="center" alignItems="center" bg="$primary">
-                <Text color="white" fontSize="$xl">
-                    Welcome to Gluestack-UI!
-                </Text>
-            </Box>
-            <Text style={{ fontSize: 22, fontWeight: 'bold' }}>Restaurants</Text>
-            {isLoading && <ActivityIndicator />}
-            {error && <Text style={{ color: 'red' }}>Error: {JSON.stringify(error)}</Text>}
-            {currentData?.contents?.map((restaurant: any) => (
-                <View key={restaurant.id} style={styles.card}>
-                    <Text style={styles.name}>{restaurant.name}</Text>
-                    <Text>{restaurant.description}</Text>
-                    <Text>🍽 Cuisine: {restaurant.cuisineType}</Text>
-                    <Text>📍 {restaurant.address?.city}</Text>
-                    <Text>📞 {restaurant.contactInformation?.phone}</Text>
-                </View>
-            ))}
-            <Text style={{ color: 'blue', marginTop: 10 }} onPress={refetch}>🔄 Refresh</Text>
-            <Button size="md" variant="solid" action="primary" onPress={handleLogout}>
-                <ButtonText>Hello World!</ButtonText>
+        <SafeAreaView>
+            <ScrollView contentContainerStyle={{padding: 20}}>
+                <Text style={{fontSize: 22, fontWeight: 'bold',paddingBottom:20}}>Restaurants</Text>
+                {isLoading && <ActivityIndicator/>}
+                {error && <Text style={{color: 'red'}}>Error: {JSON.stringify(error)}</Text>}
+                {currentData?.contents?.map((restaurant: any) => (
+                    <View key={restaurant.id} style={styles.card}>
+                        <Text style={styles.name}>{restaurant.name}</Text>
+                        <Text>{restaurant.description}</Text>
+                        <Text>🍽 Cuisine: {restaurant.cuisineType}</Text>
+                        <Text>📍 {restaurant.address?.city}</Text>
+                        <Text>📞 {restaurant.contactInformation?.phone}</Text>
+                    </View>
+                ))}
+                <Text style={{color: 'blue', marginTop: 10}} onPress={refetch}>🔄 Refresh</Text>
+            </ScrollView>
+            <Button size="md" variant="solid" action="negative" onPress={handleLogout}>
+                <ButtonText>log out</ButtonText>
             </Button>
             <ButtonToggleTheme/>
-        </ScrollView>
+        </SafeAreaView>
     );
 }
 

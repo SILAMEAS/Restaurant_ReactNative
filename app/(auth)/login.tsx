@@ -6,7 +6,7 @@ import useAuthorization from "@/hooks/custom/useAuthorization";
 export default function LoginScreen() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const {handleLogin} = useAuthorization();
+    const {handleLogin, isLoading} = useAuthorization();
 
     return <Box style={styles.container}>
         <Box style={styles.content}>
@@ -45,7 +45,7 @@ export default function LoginScreen() {
                 </HStack>
 
                 <TouchableOpacity style={styles.signInButton} onPress={() => handleLogin(email, password)}>
-                    <Text style={styles.signInText}>Sign In</Text>
+                    <Text style={styles.signInText}>{isLoading ? "loading ..." : "Sign In"}</Text>
                 </TouchableOpacity>
 
                 <Text style={styles.orText}>Or continue with</Text>
@@ -73,7 +73,6 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "red",
         justifyContent: "center",
         alignItems: 'center'
 
@@ -104,6 +103,7 @@ const styles = StyleSheet.create({
         padding: 8,
         borderRadius: 4,
         fontSize: 14,
+        color: "white"
     },
     forgotPassword: {
         fontSize: 14,

@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import {Env} from "@/services/Env";
+import {Env} from "@/Env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const customFetchFn = async (input:any, init:any) => {
     // Set a custom timeout (e.g., 120 seconds)

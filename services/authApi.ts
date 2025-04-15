@@ -1,6 +1,6 @@
 // api/authApi.ts
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import {Env} from "@/services/Env";
+import {Env} from "@/Env";
 
 export interface LoginResponse {
     accessToken: string|null;

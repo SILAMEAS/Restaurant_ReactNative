@@ -45,7 +45,7 @@ const useAuthorization = () => {
         });
         router.replace('/(auth)/login');
     };
-    return {handleLogin,handleLogout}
+    return {handleLogin,handleLogout,isLoading}
 };
 
 export default useAuthorization;

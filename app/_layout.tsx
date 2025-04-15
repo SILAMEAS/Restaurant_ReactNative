@@ -3,7 +3,7 @@ import { useFonts } from 'expo-font';
 import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -15,7 +15,6 @@ import Toast from 'react-native-toast-message';
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import {GluestackUIProvider} from "@gluestack-ui/themed";
 import {gluestackConfig} from "@/constants/gluestackConfig";
-import {COLORMODES} from "@gluestack-style/react/src/types"; // Import Toast
 SplashScreen.preventAutoHideAsync().then(r => r);
 
 export default function RootLayout() {
@@ -38,7 +37,7 @@ export default function RootLayout() {
       <Provider store={store}>
         <ThemeProvider value={theme === 'dark' ? DarkTheme : DefaultTheme}>
           <AuthWrapper/>
-          <Toast /> {/* Add Toast component here */}
+          <Toast />
           <StatusBar style="auto" />
         </ThemeProvider>
       </Provider>
@@ -46,7 +45,6 @@ export default function RootLayout() {
 }
 function AuthWrapper() {
   const dispatch = useDispatch();
-  const [colorMode, setColorMode] = useState<COLORMODES>("dark");
   const { userLogin, isLoading } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
@@ -62,7 +60,7 @@ function AuthWrapper() {
   }, [dispatch]);
 
   if (isLoading) {
-    return null; // Optionally show a loading screen
+    return null;
   }
 
   return <SafeAreaProvider>
