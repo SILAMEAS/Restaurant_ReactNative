@@ -49,19 +49,89 @@ Join our community of developers creating universal apps.
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
 
-### Build a Standalone APK or AAB (no Expo Go needed)
+## Steps to Deploy
+1. Prepare Your Expo Project
+   Verify web support: Ensure your project is configured for web. Run npx expo start, press w to open the web version, and check that it works locally at http://localhost:8081.
+   Install dependencies: If you haven’t already, add web support by installing necessary packages:
+   bash
 
-1. Install EAS CLI (if you haven't already):
+         npx expo install react-dom react-native-web @expo/metro-runtime
 
-
-      npm install -g eas-cli
-
-
-2. Login to Expo account:
-3. Configure your project for EAS:
-4. Build the Android APK:
-5. After the build completes, you'll get a download link to the .apk or .aab.
+Check app.json/app.config.js: In your app.json or app.config.js, ensure the expo.web field is correctly set. For a single-page application (SPA), you might have:
+json
 
 
+      {
+         "expo": {
+               "web": {
+               "output": "single"
+               }
+            }
+      }
 
-      npm install -g eas-cli
+The output: "single" setting is typical for SPAs to ensure proper routing. If you’re using static rendering for SEO, set it to static and configure redirects later if needed.
+Test production build locally: Generate a production build to catch any issues:
+bash
+
+
+      npx expo export --platform web
+
+This creates a dist directory with static files. Test it locally with:
+      bash
+
+
+      npx expo serve
+
+Open http://localhost:8081 to verify it works as expected.
+2. Set Up Vercel Configuration
+   Create vercel.json: At the root of your project, create a vercel.json file to configure Vercel for an Expo web app. This ensures proper routing for SPAs. Add:
+   json
+
+
+      {
+         "rewrites": [
+                        {
+                        "source": "/(.*)",
+                        "destination": "/index.html"
+                        }
+                     ],
+         "cleanUrls": true,
+         "trailingSlash": false
+      }
+
+The rewrites rule ensures all routes point to index.html for client-side routing, which is critical for SPAs built with Expo Router or React Navigation.
+Update package.json: Add a vercel-build script to automate the build process during deployment:
+json
+
+
+      {
+         "scripts": {
+         "vercel-build": "npx expo export --platform web"
+         }
+      }
+
+This tells Vercel to run the Expo web export command during deployment.
+3. Push Your Project to a Git Repository
+4. Script on Vercel
+
+
+### In the Vercel dashboard, under 
+
+#### "Build Command", change it to:
+
+
+      npx expo export --platform web
+---
+   Note : 
+         package.json should have this:
+   
+         {
+            "scripts": {
+               "vercel-build": "npx expo export --platform web"
+            }
+         }
+
+#### "Output Directory", change it to: dist
+
+
+  
